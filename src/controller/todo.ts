@@ -1,12 +1,9 @@
 import { RequestHandler } from 'express';
 import Todo, { TodoModel } from '../models/todo';
 
-//const TODOS: Todo[] = [];
-
 export const createTodo: RequestHandler = async (req, res, next) => {
   try {
     const data: TodoModel = req.body;
-    console.log('Data', data);
     let todos = await Todo.create(data);
     return res
       .status(200)
@@ -36,5 +33,3 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
-// add deleteTodo method

@@ -5,11 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.getTodos = exports.createTodo = void 0;
 const todo_1 = __importDefault(require("../models/todo"));
-//const TODOS: Todo[] = [];
 const createTodo = async (req, res, next) => {
     try {
         const data = req.body;
-        console.log('Data', data);
         let todos = await todo_1.default.create(data);
         return res
             .status(200)
@@ -43,4 +41,3 @@ const updateTodo = async (req, res, next) => {
     }
 };
 exports.updateTodo = updateTodo;
-// add deleteTodo method
