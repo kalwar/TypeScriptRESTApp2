@@ -33,3 +33,14 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteTodo: RequestHandler = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let isDeleted = await Todo.findByIdAndDelete(id);
+    if (!isDeleted) throw new Error('Failed to delete todo!');
+    return res.status(200).json({ message: 'Todo deleted successfully!' });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
