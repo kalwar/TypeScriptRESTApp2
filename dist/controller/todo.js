@@ -1,27 +1,46 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTodo = exports.getTodos = exports.createTodo = void 0;
-const todo_1 = require("../models/todo");
-const TODOS = [];
-const createTodo = (req, res, next) => {
-    const text = req.body.text;
-    const newTodo = new todo_1.Todo(Math.random().toString(), text);
-    TODOS.push(newTodo);
-    res.status(201).json({ message: 'Create the todo', createTodo: newTodo });
+const todo_1 = __importDefault(require("../models/todo"));
+//const TODOS: Todo[] = [];
+const createTodo = async (req, res, next) => {
+    try {
+        const data = req.body;
+        console.log('Data', data);
+        let todos = await todo_1.default.create(data);
+        return res
+            .status(200)
+            .json({ message: 'Todo created sucessfully', data: todos });
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 exports.createTodo = createTodo;
-const getTodos = (req, res, next) => {
-    res.json({ todos: TODOS });
+const getTodos = async (req, res, next) => {
+    try {
+        let todos = await todo_1.default.find({});
+        return res.status(200).json({ message: 'All todos', data: todos });
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 exports.getTodos = getTodos;
-const updateTodo = (req, res, next) => {
-    const todoId = req.params.id;
-    const updatedText = req.body.text;
-    const todoIndex = TODOS.findIndex((todo) => todo.id === todoId);
-    if (todoIndex < 0) {
-        throw new Error('Could not find todo!');
+const updateTodo = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        let todos = await todo_1.default.findByIdAndUpdate(id, req.body, { new: true });
+        return res
+            .status(200)
+            .json({ message: 'Todo updated succesfully', data: todos });
     }
-    TODOS[todoIndex] = new todo_1.Todo(TODOS[todoIndex].id, updatedText);
-    res.json({ message: 'Updated', updateTodo: TODOS[todoIndex] });
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 exports.updateTodo = updateTodo;
+// add deleteTodo method
